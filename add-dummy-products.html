@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Dummy Products - Ayra Wooden Services</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #8B4513;
+        }
+
+        button {
+            background: linear-gradient(135deg, #D2691E, #A0522D);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            display: block;
+        }
+
+        .product-list {
+            margin-top: 20px;
+        }
+
+        .product-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🪵 Add Dummy Products to Firebase</h1>
+        <p>This tool will add 6 sample wooden products to your Firebase Realtime Database.</p>
+
+        <button id="addProductsBtn" onclick="addDummyProducts()">Add Dummy Products</button>
+        <button onclick="window.location.href='index.html'">View Website</button>
+        <button onclick="window.location.href='admin.html'">Go to Admin Panel</button>
+
+        <div id="status" class="status"></div>
+
+        <div class="product-list" id="productList"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, push, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBIQOqRPMN-utOc6s607OXfG1V3ESU2C8Q",
+            authDomain: "rishu-8446b.firebaseapp.com",
+            databaseURL: "https://rishu-8446b-default-rtdb.firebaseio.com",
+            projectId: "rishu-8446b",
+            storageBucket: "rishu-8446b.firebasestorage.app",
+            messagingSenderId: "523937554149",
+            appId: "1:523937554149:web:550f3cedde743dbf9b7e0c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Dummy Products Data
+        const dummyProducts = [
+            {
+                name: "Classic Wooden Dining Table",
+                price: 35000,
+                category: "Furniture",
+                description: "Handcrafted solid wood dining table with elegant finish. Seats 6 people comfortably. Perfect for family gatherings.",
+                imageUrl: "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=800&q=80",
+                createdAt: Date.now() - 86400000 * 5
+            },
+            {
+                name: "Premium Teak Wood Door",
+                price: 28000,
+                category: "Doors & Windows",
+                description: "Solid teak wood door with intricate carving. Weather-resistant and durable. Includes frame and hardware.",
+                imageUrl: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=800&q=80",
+                createdAt: Date.now() - 86400000 * 4
+            },
+            {
+                name: "Modern Modular Kitchen Set",
+                price: 125000,
+                category: "Modular Kitchen",
+                description: "Complete modular kitchen with premium wood finish. Includes cabinets, drawers, and countertop. Space-optimized design.",
+                imageUrl: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&q=80",
+                createdAt: Date.now() - 86400000 * 3
+            },
+            {
+                name: "Wooden Wardrobe with Mirror",
+                price: 45000,
+                category: "Furniture",
+                description: "Spacious 3-door wardrobe with full-length mirror. Multiple compartments and hanging space. Elegant brown finish.",
+                imageUrl: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=800&q=80",
+                createdAt: Date.now() - 86400000 * 2
+            },
+            {
+                name: "Custom Wooden Bookshelf",
+                price: 18000,
+                category: "Custom Work",
+                description: "Bespoke wooden bookshelf with 5 shelves. Can be customized to your dimensions. Strong and stylish.",
+                imageUrl: "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=800&q=80",
+                createdAt: Date.now() - 86400000 * 1
+            },
+            {
+                name: "Wooden Window Frame Set",
+                price: 22000,
+                category: "Doors & Windows",
+                description: "Set of 2 wooden window frames with glass. Traditional design with modern durability. Easy to install.",
+                imageUrl: "https://images.unsplash.com/photo-1545259741-2ea3ebf61fa3?w=800&q=80",
+                createdAt: Date.now()
+            }
+        ];
+
+        window.addDummyProducts = async function () {
+            const btn = document.getElementById('addProductsBtn');
+            const status = document.getElementById('status');
+            const productList = document.getElementById('productList');
+
+            btn.disabled = true;
+            btn.textContent = 'Adding Products...';
+            status.className = 'status info';
+            status.textContent = 'Adding dummy products to Firebase...';
+            productList.innerHTML = '';
+
+            try {
+                const productsRef = ref(database, 'products');
+                let addedCount = 0;
+
+                for (const product of dummyProducts) {
+                    const newProductRef = push(productsRef);
+                    await set(newProductRef, product);
+                    addedCount++;
+
+                    const item = document.createElement('div');
+                    item.className = 'product-item';
+                    item.textContent = `✅ Added: ${product.name} - ₹${product.price.toLocaleString('en-IN')}`;
+                    productList.appendChild(item);
+                }
+
+                status.className = 'status success';
+                status.innerHTML = `
+                    <strong>Success!</strong> Added ${addedCount} dummy products to Firebase.<br>
+                    <a href="index.html" style="color: #155724;">View them on the website →</a>
+                `;
+                btn.textContent = 'Products Added ✓';
+
+            } catch (error) {
+                console.error('Error adding products:', error);
+                status.className = 'status error';
+                status.innerHTML = `
+                    <strong>Error!</strong> ${error.message}<br>
+                    Make sure you have write permissions in Firebase Database Rules.
+                `;
+                btn.disabled = false;
+                btn.textContent = 'Try Again';
+            }
+        };
+    </script>
+</body>
+
+</html>

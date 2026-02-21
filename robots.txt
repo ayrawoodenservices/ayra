@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /add-dummy-products.html
+
+# Sitemap location
+Sitemap: https://ayrawoodenservices.online/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

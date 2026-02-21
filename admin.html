@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Ayra Wooden Services</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <style>
+        /* ==================== RESET & BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-brown: #8B4513;
+            --medium-brown: #A0522D;
+            --light-brown: #D2691E;
+            --dark-wood: #3E2723;
+            --cream: #F5F5DC;
+            --beige: #FAEBD7;
+            --text-dark: #2C1810;
+            --text-light: #F5F5DC;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --transition: 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--beige) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Playfair Display', 'Merriweather', Georgia, serif;
+            font-weight: 700;
+        }
+
+        /* ==================== LOGIN PAGE ==================== */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            max-width: 450px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            fill: var(--light-brown);
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            color: var(--dark-wood);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: var(--medium-brown);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--cream);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--beige);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--light-brown);
+            background: white;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--light-brown), var(--medium-brown));
+            color: white;
+            box-shadow: 0 4px 15px rgba(210, 105, 30, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(210, 105, 30, 0.6);
+        }
+
+        .btn-google {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid var(--cream);
+            margin-top: 1rem;
+        }
+
+        .btn-google:hover {
+            background: var(--beige);
+            border-color: var(--light-brown);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--cream);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            color: var(--medium-brown);
+            font-size: 0.9rem;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-home a {
+            color: var(--medium-brown);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .back-home a:hover {
+            color: var(--light-brown);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: var(--danger);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* ==================== DASHBOARD ==================== */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--dark-wood) 0%, var(--primary-brown) 100%);
+            color: white;
+            padding: 0.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dashboard-title h1 {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-email {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, var(--light-brown), var(--medium-brown));
+            color: white;
+            padding: 0.4rem 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 15px rgba(210, 105, 30, 0.4);
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(210, 105, 30, 0.6);
+        }
+
+        .dashboard-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-bottom: 5rem;
+        }
+
+        .section-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-card h2 {
+            color: var(--dark-wood);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ==================== PRODUCT FORM ==================== */
+        .product-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-form .form-group {
+            margin-bottom: 0;
+        }
+
+        .product-form .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .product-form textarea {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--cream);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            background: var(--beige);
+            transition: var(--transition);
+        }
+
+        .product-form textarea:focus {
+            outline: none;
+            border-color: var(--light-brown);
+            background: white;
+        }
+
+        .product-form select {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--cream);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--beige);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .product-form select:focus {
+            outline: none;
+            border-color: var(--light-brown);
+            background: white;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--success), #45a049);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ==================== PRODUCTS TABLE ==================== */
+        .products-table-container {
+            overflow-x: auto;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--cream);
+        }
+
+        .products-table th {
+            background: linear-gradient(135deg, var(--dark-wood), var(--primary-brown));
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .products-table tr:hover {
+            background: var(--beige);
+        }
+
+        .product-image-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .btn-edit {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        .no-products-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--medium-brown);
+            font-size: 1.1rem;
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            color: var(--dark-wood);
+            font-size: 1.8rem;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--medium-brown);
+            transition: var(--transition);
+        }
+
+        .btn-close:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        /* ==================== LOADING SPINNER ==================== */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ==================== BOTTOM NAVIGATION ==================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--dark-wood) 0%, var(--primary-brown) 100%);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            display: none;
+            padding: 0.5rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .bottom-nav-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            background: none;
+            border: none;
+            color: var(--cream);
+            cursor: pointer;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            transition: all var(--transition);
+            position: relative;
+            flex: 1;
+            max-width: 120px;
+        }
+
+        .bottom-nav-item svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--cream);
+            transition: all var(--transition);
+        }
+
+        .bottom-nav-item span {
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+
+        .bottom-nav-item:hover {
+            background: rgba(210, 105, 30, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .bottom-nav-item:hover svg {
+            fill: var(--light-brown);
+            transform: scale(1.1);
+        }
+
+        .bottom-nav-item:hover span {
+            color: var(--light-brown);
+        }
+
+        .bottom-nav-item.active {
+            background: rgba(210, 105, 30, 0.3);
+        }
+
+        .bottom-nav-item.active svg {
+            fill: var(--light-brown);
+        }
+
+        .bottom-nav-item.active span {
+            color: var(--light-brown);
+        }
+
+        .bottom-nav-item:active {
+            transform: translateY(-1px);
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .user-info {
+                flex-direction: column;
+            }
+
+            .product-form {
+                grid-template-columns: 1fr;
+            }
+
+            .products-table {
+                font-size: 0.85rem;
+            }
+
+            .products-table th,
+            .products-table td {
+                padding: 0.7rem 0.5rem;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 2rem 1.5rem;
+            }
+
+            .dashboard-content {
+                padding: 1rem;
+            }
+
+            .section-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ==================== LOGIN PAGE ==================== -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <div class="login-header">
+                <img src="logo.png" alt="Logo" class="login-logo"
+                    style="width: 80px; height: auto; object-fit: contain;">
+                <h1>Admin Login</h1>
+                <p>Ayra Wooden Services</p>
+            </div>
+
+            <div class="error-message" id="loginError"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span>Sign In</span>
+                </button>
+            </form>
+
+            <div class="back-home">
+                <a href="index.html">← Back to Website</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <div class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <img src="logo.png" alt="Logo" style="height: 32px; width: auto; object-fit: contain;">
+                <h1>Admin Dashboard</h1>
+            </div>
+            <div class="user-info">
+                <span class="user-email" id="userEmail"></span>
+                <button class="btn-logout" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Add Product Section -->
+            <div class="section-card" id="addProduct">
+                <h2>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--light-brown)"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display:inline-block; vertical-align:middle; margin-right:0.5rem;">
+                        <path
+                            d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+                        <path d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4z" />
+                    </svg>
+                    Add New Product
+                </h2>
+                <form class="product-form" id="productForm">
+                    <div class="form-group">
+                        <label for="productName">Product Name *</label>
+                        <input type="text" id="productName" placeholder="e.g., Wooden Dining Table" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price (₹) *</label>
+                        <input type="number" id="productPrice" placeholder="e.g., 25000" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Category *</label>
+                        <select id="productCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="Doors & Windows">Doors & Windows</option>
+                            <option value="Modular Kitchen">Modular Kitchen</option>
+                            <option value="Custom Work">Custom Work</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">Image URL *</label>
+                        <input type="url" id="productImage" placeholder="https://example.com/image.jpg" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="productDescription">Description *</label>
+                        <textarea id="productDescription" placeholder="Describe the product..." required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            <span id="submitBtnText">Add Product</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Manage Products Section -->
+            <div class="section-card" id="manageProducts">
+                <h2>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--light-brown)"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display:inline-block; vertical-align:middle; margin-right:0.5rem;">
+                        <path
+                            d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+                        <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z" />
+                    </svg>
+                    Manage Products
+                </h2>
+                <div class="products-table-container">
+                    <table class="products-table" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <tr>
+                                <td colspan="6" class="no-products-message">Loading products...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Manage Inquiries Section -->
+            <div class="section-card" id="manageInquiries">
+                <h2>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--light-brown)"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display:inline-block; vertical-align:middle; margin-right:0.5rem;">
+                        <path
+                            d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
+                    </svg>
+                    Customer Inquiries
+                </h2>
+                <div class="products-table-container">
+                    <table class="products-table" id="inquiriesTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Service</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inquiriesTableBody">
+                            <tr>
+                                <td colspan="8" class="no-products-message">Loading inquiries...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BOTTOM NAVIGATION (MOBILE) ==================== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <div class="bottom-nav-container">
+            <button class="bottom-nav-item" onclick="scrollToSection('addProduct', event)">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+                    <path d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4z" />
+                </svg>
+                <span>Add</span>
+            </button>
+            <button class="bottom-nav-item" onclick="scrollToSection('manageProducts', event)">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+                    <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z" />
+                </svg>
+                <span>Products</span>
+            </button>
+            <button class="bottom-nav-item" onclick="scrollToSection('manageInquiries', event)">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
+                </svg>
+                <span>Inquiries</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==================== EDIT MODAL ==================== -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--light-brown)"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display:inline-block; vertical-align:middle; margin-right:0.5rem;">
+                        <path
+                            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                    </svg>
+                    Edit Product
+                </h2>
+                <button class="btn-close" id="closeModal">&times;</button>
+            </div>
+            <form class="product-form" id="editForm">
+                <input type="hidden" id="editProductId">
+                <div class="form-group">
+                    <label for="editProductName">Product Name *</label>
+                    <input type="text" id="editProductName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPrice">Price (₹) *</label>
+                    <input type="number" id="editProductPrice" required min="0">
+                </div>
+                <div class="form-group">
+                    <label for="editProductCategory">Category *</label>
+                    <select id="editProductCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Doors & Windows">Doors & Windows</option>
+                        <option value="Modular Kitchen">Modular Kitchen</option>
+                        <option value="Custom Work">Custom Work</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editProductImage">Image URL *</label>
+                    <input type="url" id="editProductImage" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="editProductDescription">Description *</label>
+                    <textarea id="editProductDescription" required></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="btn-submit" id="updateBtn">
+                        <span id="updateBtnText">Update Product</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== FIREBASE & JAVASCRIPT ==================== -->
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import {
+            getDatabase,
+            ref,
+            push,
+            set,
+            onValue,
+            remove,
+            update
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBIQOqRPMN-utOc6s607OXfG1V3ESU2C8Q",
+            authDomain: "rishu-8446b.firebaseapp.com",
+            databaseURL: "https://rishu-8446b-default-rtdb.firebaseio.com",
+            projectId: "rishu-8446b",
+            storageBucket: "rishu-8446b.firebasestorage.app",
+            messagingSenderId: "523937554149",
+            appId: "1:523937554149:web:550f3cedde743dbf9b7e0c"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        const POP_EMAILS_ENCODED = [
+            "cmlzaHVAYnV4aS5jb20=",
+            "bWFyb29mYXNocmFmOTFAZ21haWwuY29t"
+        ];
+        const POP_EMAILS = POP_EMAILS_ENCODED.map(email => atob(email));
+
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginError = document.getElementById('loginError');
+        const userEmail = document.getElementById('userEmail');
+        const productForm = document.getElementById('productForm');
+        const productsTableBody = document.getElementById('productsTableBody');
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+        const closeModal = document.getElementById('closeModal');
+
+        // Show Error Message
+        function showError(message) {
+            loginError.textContent = message;
+            loginError.classList.add('show');
+            setTimeout(() => {
+                loginError.classList.remove('show');
+            }, 5000);
+        }
+
+        function isPop(email) {
+            return POP_EMAILS.includes(email);
+        }
+
+        // Auth State Observer
+        onAuthStateChanged(auth, (user) => {
+            const bottomNav = document.getElementById('bottomNav');
+
+            if (user) {
+                if (!isPop(user.email)) {
+                    showError('Access Denied: You are not authorized.');
+                    signOut(auth);
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                    return;
+                }
+
+                // Show dashboard and bottom nav
+                loginPage.style.display = 'none';
+                dashboard.classList.add('active');
+                userEmail.textContent = user.email;
+                if (bottomNav) {
+                    bottomNav.style.display = 'block';
+                }
+                loadProducts();
+                loadInquiries();
+            } else {
+                // Show login page and hide bottom nav
+                loginPage.style.display = 'flex';
+                dashboard.classList.remove('active');
+                if (bottomNav) {
+                    bottomNav.style.display = 'none';
+                }
+            }
+        });
+
+        // Email/Password Login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            loginBtn.innerHTML = '<span class="spinner"></span><span>Signing in...</span>';
+            loginBtn.disabled = true;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error('Login error:', error);
+                showError(error.message || 'Failed to sign in. Please check your credentials.');
+                loginBtn.innerHTML = '<span>Sign In</span>';
+                loginBtn.disabled = false;
+            }
+        });
+
+
+
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.reload();
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Failed to logout. Please try again.');
+            }
+        });
+
+        // Add Product
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            const submitBtnText = document.getElementById('submitBtnText');
+
+            submitBtn.disabled = true;
+            submitBtnText.innerHTML = '<span class="spinner"></span> Adding...';
+
+            const productData = {
+                name: document.getElementById('productName').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                category: document.getElementById('productCategory').value,
+                imageUrl: document.getElementById('productImage').value,
+                description: document.getElementById('productDescription').value,
+                createdAt: Date.now()
+            };
+
+            try {
+                const productsRef = ref(database, 'products');
+                const newProductRef = push(productsRef);
+                await set(newProductRef, productData);
+
+                // Reset form
+                productForm.reset();
+                alert('Product added successfully!');
+            } catch (error) {
+                console.error('Error adding product:', error);
+                alert('Failed to add product. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtnText.textContent = 'Add Product';
+            }
+        });
+
+        // Load Products
+        function loadProducts() {
+            const productsRef = ref(database, 'products');
+
+            onValue(productsRef, (snapshot) => {
+                productsTableBody.innerHTML = '';
+
+                if (!snapshot.exists()) {
+                    productsTableBody.innerHTML = '<tr><td colspan="6" class="no-products-message">No products found. Add your first product above!</td></tr>';
+                    return;
+                }
+
+                const products = snapshot.val();
+                const productsArray = Object.entries(products).map(([id, data]) => ({
+                    id,
+                    ...data
+                }));
+
+                // Sort by createdAt (newest first)
+                productsArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                productsArray.forEach(product => {
+                    const row = createProductRow(product);
+                    productsTableBody.appendChild(row);
+                });
+            });
+        }
+
+        // Create Product Row
+        function createProductRow(product) {
+            const row = document.createElement('tr');
+
+            const imageUrl = product.imageUrl || '';
+            const truncatedDesc = product.description.length > 50
+                ? product.description.substring(0, 50) + '...'
+                : product.description;
+
+            row.innerHTML = `
+                <td><img src="${imageUrl}" alt="${product.name}" class="product-image-thumb" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23D2691E\\' width=\\'60\\' height=\\'60\\'/></svg>'"></td>
+                <td><strong>${product.name}</strong></td>
+                <td>${product.category}</td>
+                <td>₹${parseFloat(product.price).toLocaleString('en-IN')}</td>
+                <td>${truncatedDesc}</td>
+                <td class="product-actions">
+                    <button class="btn-edit" onclick="editProduct('${product.id}')">Edit</button>
+                    <button class="btn-delete" onclick="deleteProduct('${product.id}', '${product.name}')">Delete</button>
+                </td>
+            `;
+
+            return row;
+        }
+
+        // Edit Product
+        window.editProduct = async (productId) => {
+            const productRef = ref(database, `products/${productId}`);
+
+            onValue(productRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const product = snapshot.val();
+
+                    document.getElementById('editProductId').value = productId;
+                    document.getElementById('editProductName').value = product.name;
+                    document.getElementById('editProductPrice').value = product.price;
+                    document.getElementById('editProductCategory').value = product.category;
+                    document.getElementById('editProductImage').value = product.imageUrl;
+                    document.getElementById('editProductDescription').value = product.description;
+
+                    editModal.classList.add('active');
+                }
+            }, { onlyOnce: true });
+        };
+
+        // Update Product
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const updateBtn = document.getElementById('updateBtn');
+            const updateBtnText = document.getElementById('updateBtnText');
+
+            updateBtn.disabled = true;
+            updateBtnText.innerHTML = '<span class="spinner"></span> Updating...';
+
+            const productId = document.getElementById('editProductId').value;
+            const productData = {
+                name: document.getElementById('editProductName').value,
+                price: parseFloat(document.getElementById('editProductPrice').value),
+                category: document.getElementById('editProductCategory').value,
+                imageUrl: document.getElementById('editProductImage').value,
+                description: document.getElementById('editProductDescription').value
+            };
+
+            try {
+                const productRef = ref(database, `products/${productId}`);
+                await update(productRef, productData);
+
+                editModal.classList.remove('active');
+                alert('Product updated successfully!');
+            } catch (error) {
+                console.error('Error updating product:', error);
+                alert('Failed to update product. Please try again.');
+            } finally {
+                updateBtn.disabled = false;
+                updateBtnText.textContent = 'Update Product';
+            }
+        });
+
+        // Delete Product
+        window.deleteProduct = async (productId, productName) => {
+            if (confirm(`Are you sure you want to delete "${productName}"?`)) {
+                try {
+                    const productRef = ref(database, `products/${productId}`);
+                    await remove(productRef);
+                    alert('Product deleted successfully!');
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    alert('Failed to delete product. Please try again.');
+                }
+            }
+        };
+
+        // Close Modal
+        closeModal.addEventListener('click', () => {
+            editModal.classList.remove('active');
+        });
+
+        // Close modal when clicking outside
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                editModal.classList.remove('active');
+            }
+        });
+
+        // Load Inquiries
+        function loadInquiries() {
+            const inquiriesTableBody = document.getElementById('inquiriesTableBody');
+            const inquiriesRef = ref(database, 'inquiries');
+
+            onValue(inquiriesRef, (snapshot) => {
+                inquiriesTableBody.innerHTML = '';
+
+                if (!snapshot.exists()) {
+                    inquiriesTableBody.innerHTML = '<tr><td colspan="8" class="no-products-message">No inquiries yet.</td></tr>';
+                    return;
+                }
+
+                const inquiries = snapshot.val();
+                const inquiriesArray = Object.entries(inquiries).map(([id, data]) => ({
+                    id,
+                    ...data
+                }));
+
+                // Sort by createdAt (newest first)
+                inquiriesArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                inquiriesArray.forEach(inquiry => {
+                    const row = createInquiryRow(inquiry);
+                    inquiriesTableBody.appendChild(row);
+                });
+            });
+        }
+
+        // Create Inquiry Row
+        function createInquiryRow(inquiry) {
+            const row = document.createElement('tr');
+
+            const date = new Date(inquiry.createdAt);
+            const formattedDate = date.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const truncatedMessage = inquiry.message.length > 50
+                ? inquiry.message.substring(0, 50) + '...'
+                : inquiry.message;
+
+            const statusBadge = inquiry.status === 'new'
+                ? '<span style="background: #4CAF50; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">New</span>'
+                : '<span style="background: #9E9E9E; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Contacted</span>';
+
+            row.innerHTML = `
+                <td><strong>${inquiry.name}</strong></td>
+                <td><a href="tel:${inquiry.phone}" style="color: var(--primary-brown);">${inquiry.phone}</a></td>
+                <td><a href="mailto:${inquiry.email}" style="color: var(--primary-brown);">${inquiry.email}</a></td>
+                <td>${inquiry.service}</td>
+                <td title="${inquiry.message}">${truncatedMessage}</td>
+                <td>${formattedDate}</td>
+                <td>${statusBadge}</td>
+                <td class="product-actions">
+                    <button class="btn-delete" onclick="deleteInquiry('${inquiry.id}', '${inquiry.name}')">Delete</button>
+                </td>
+            `;
+
+            return row;
+        }
+
+        // Delete Inquiry
+        window.deleteInquiry = async (inquiryId, inquiryName) => {
+            if (confirm(`Are you sure you want to delete inquiry from "${inquiryName}"?`)) {
+                try {
+                    const inquiryRef = ref(database, `inquiries/${inquiryId}`);
+                    await remove(inquiryRef);
+                    alert('Inquiry deleted successfully!');
+                } catch (error) {
+                    console.error('Error deleting inquiry:', error);
+                    alert('Failed to delete inquiry. Please try again.');
+                }
+            }
+        };
+
+        // Load inquiries on page load
+        loadInquiries();
+
+        // Bottom Navigation - Smooth Scroll
+        window.scrollToSection = function (sectionId, event) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                // Get the header height for offset
+                const header = document.querySelector('.dashboard-header');
+                const headerHeight = header ? header.offsetHeight : 60;
+
+                // Calculate position
+                const elementPosition = section.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.scrollY - headerHeight - 20;
+
+                // Smooth scroll to position
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Update active state
+                if (event) {
+                    document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    event.currentTarget.classList.add('active');
+                }
+            }
+        };
+
+    </script>
+
+    <script>
+        // Bottom Navigation - Smooth Scroll
+        window.scrollToSection = function (sectionId, event) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                // Get the header height for offset
+                const header = document.querySelector('.dashboard-header');
+                const headerHeight = header ? header.offsetHeight : 60;
+
+                // Calculate position
+                const elementPosition = section.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.scrollY - headerHeight - 20;
+
+                // Smooth scroll to position
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Update active state
+                if (event) {
+                    document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    event.currentTarget.classList.add('active');
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>
